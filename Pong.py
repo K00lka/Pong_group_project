@@ -15,8 +15,8 @@ pygame.display.set_caption("Pong")
 
 #deklaracja ramek dla obiektów (hitboxy):
 ball = pygame.Rect(screen_width/2 - 15, screen_height/2 - 15, 30, 30)
-paddle1 = pygame.Rect(screen_width - 20, screen_height/2 - 60, 10, 120)
-paddle2 = pygame.Rect(10, screen_height/2 - 60, 10, 120)
+paddle_right = pygame.Rect(screen_width - 20, screen_height/2 - 60, 10, 120)
+paddle_left = pygame.Rect(10, screen_height/2 - 60, 10, 120)
 
 #kolorki:
 background_color = (235, 211, 234) #tło
@@ -25,6 +25,10 @@ objects_color = (64, 6, 62) #piłka i paletki
 #prędkość
 ball_speed_x = 7
 ball_speed_y = 7
+paddle_right_speed = 0
+paddle_left_speed = 0
+
+
 
 def ball_movement():
     global ball_speed_x, ball_speed_y 
@@ -37,8 +41,24 @@ def ball_movement():
         ball_speed_y *= -1 #zmiana kierunku piłki po uderzeniu w górną lub dolną krawędź
     if ball.left <= 0 or ball.right >= screen_width:
         ball_speed_x *= -1 #zmiana kierunku piłki po uderzeniu w lewą lub prawą krawędź
-    if ball.colliderect(paddle1) or ball.colliderect(paddle2):
+    if ball.colliderect(paddle_right) or ball.colliderect(paddle_left):
         ball_speed_x *= -1 
+        
+def paddle_right_movement():
+    #tutaj nie edutujemy zmiennej wewnątrz funkcji, tylko zmieniamy jej wartość w pętli głównej, więc nie używamy global
+    paddle_right.y += paddle_right_speed
+    if paddle_right.top <= 0:
+        paddle_right.top = 0
+    if paddle_right.bottom >= screen_height:
+        paddle_right.bottom = screen_height
+        
+def paddle_left_movement():
+    #tutaj nie edutujemy zmiennej wewnątrz funkcji, tylko zmieniamy jej wartość w pętli głównej, więc nie używamy global
+    paddle_left.y += paddle_left_speed
+    if paddle_left.top <= 0:
+        paddle_left.top = 0
+    if paddle_left.bottom >= screen_height:
+        paddle_left.bottom = screen_height
         
 while True:
     #zamykanie okna:
@@ -46,12 +66,38 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    ball_movement() #ruch piłki           
+    #ruch paletki prawej:
+        if event.type == KEYDOWN:
+            if event.key == K_DOWN:
+                paddle_right_speed += 7
+            if event.key == K_UP:
+                paddle_right_speed -= 7
+        if event.type == KEYUP:
+            if event.key == K_UP:
+                paddle_right_speed += 7
+            if event.key == K_DOWN:
+                paddle_right_speed -= 7
+    #ruch paletki lewej:
+        if event.type == KEYDOWN:
+            if event.key == K_s:
+                paddle_left_speed += 7
+            if event.key == K_w:
+                paddle_left_speed -= 7
+        if event.type == KEYUP:
+            if event.key == K_w:
+                paddle_left_speed += 7
+            if event.key == K_s:
+                paddle_left_speed -= 7
+                
+                
+    ball_movement() #ruch piłki
+    paddle_right_movement() #ruch paletki prawej
+    paddle_left_movement() #ruch paletki lewej           
             
     #obrazy dla obiektów:
     screen.fill(background_color) #tło
-    pygame.draw.rect(screen, objects_color, paddle1) #paletka 1
-    pygame.draw.rect(screen, objects_color, paddle2) #paletka 2
+    pygame.draw.rect(screen, objects_color, paddle_right) #paletka prawa
+    pygame.draw.rect(screen, objects_color, paddle_left) #paletka lewa
     pygame.draw.ellipse(screen, objects_color, ball) #piłka  
     pygame.draw.aaline(screen, objects_color, (screen_width/2, 0), (screen_width/2, screen_height)) #linia środkowa      
     #update okna:        
