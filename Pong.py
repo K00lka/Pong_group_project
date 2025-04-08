@@ -27,9 +27,10 @@ ball_speed_x = 7
 ball_speed_y = 7
 
 def ball_movement():
-    global ball_speed_x, ball_speed_y #dałam, to do funkcji, żeby sie nie pogubić w loopie, dając smienne do funkcji, 
-    #trzeba było zadeklarować je jako globalne
-    #ruch piłki:
+    global ball_speed_x, ball_speed_y 
+    #dałam, to do funkcji, żeby sie nie pogubić w loopie, zamiast returna użyłam global bo, 
+    #nie będie dużo tych funkcji
+ 
     ball.x += ball_speed_x
     ball.y += ball_speed_y
     if ball.top <= 0 or ball.bottom >= screen_height:
