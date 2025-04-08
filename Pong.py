@@ -26,13 +26,9 @@ objects_color = (64, 6, 62) #piłka i paletki
 ball_speed_x = 7
 ball_speed_y = 7
 
-while True:
-    #zamykanie okna:
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-            
+def ball_movement():
+    global ball_speed_x, ball_speed_y #dałam, to do funkcji, żeby sie nie pogubić w loopie, dając smienne do funkcji, 
+    #trzeba było zadeklarować je jako globalne
     #ruch piłki:
     ball.x += ball_speed_x
     ball.y += ball_speed_y
@@ -40,6 +36,16 @@ while True:
         ball_speed_y *= -1 #zmiana kierunku piłki po uderzeniu w górną lub dolną krawędź
     if ball.left <= 0 or ball.right >= screen_width:
         ball_speed_x *= -1 #zmiana kierunku piłki po uderzeniu w lewą lub prawą krawędź
+    if ball.colliderect(paddle1) or ball.colliderect(paddle2):
+        ball_speed_x *= -1 
+        
+while True:
+    #zamykanie okna:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+    ball_movement() #ruch piłki           
             
     #obrazy dla obiektów:
     screen.fill(background_color) #tło
